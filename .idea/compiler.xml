@@ -6,10 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="JUnit" />
         <module name="testNG" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="JUnit" target="1.5" />
       <module name="testNG" target="1.5" />
     </bytecodeTargetLevel>
   </component>
