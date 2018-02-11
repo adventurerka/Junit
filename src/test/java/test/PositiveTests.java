@@ -3,31 +3,24 @@ package test;
 import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @RunWith(DataProviderRunner.class)
 public class PositiveTests implements MyCategories{
 
-    Path currentRelativePath = Paths.get("");
-    String path = currentRelativePath.toAbsolutePath().toString()+"/new/";
-    File file = new File(path);
-
-    @Before
-    public void setUp() {
-        file.mkdir();
-    }
+    @Rule
+    public TemporaryFolder tmpdir = new TemporaryFolder();
 
     @DataProvider
     public static Object[][] fileName() throws IOException {
@@ -59,8 +52,8 @@ public class PositiveTests implements MyCategories{
     @UseDataProvider("fileContent")
     public void createFileWithData(String fileContent, String name) throws IOException {
         FileCreator fc = new FileCreator();
-        fc.createNewFile(path+name+".txt", fileContent);
-        Assert.assertEquals(fc.readFile(path+name+".txt"), fileContent);
+        fc.createNewFile(tmpdir.getRoot()+name+".txt", fileContent);
+        Assert.assertEquals(fc.readFile(tmpdir.getRoot()+name+".txt"), fileContent);
     }
 
     @Test
@@ -68,15 +61,9 @@ public class PositiveTests implements MyCategories{
     @UseDataProvider("fileName")
     public void createFileAndChangeData (String name) throws IOException {
         FileCreator fc = new FileCreator();
-        fc.createNewFile(path+name+".txt","POTATO!!!");
-        fc.createNewFile(path+name+".txt", "APPLE!!!");
-        Assert.assertEquals(fc.readFile(path+name+".txt"),"APPLE!!!");
+        fc.createNewFile(tmpdir.getRoot()+name+".txt","POTATO!!!");
+        fc.createNewFile(tmpdir.getRoot()+name+".txt", "APPLE!!!");
+        Assert.assertEquals(fc.readFile(tmpdir.getRoot()+name+".txt"),"APPLE!!!");
     }
-
-    @After
-    public void tearDown() {
-    new FileCreator().deleteDir(file);
-    }
-
 
 }
