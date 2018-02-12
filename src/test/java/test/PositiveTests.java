@@ -16,27 +16,14 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import static test.DataSource.Type.RESOURCE;
+
 @RunWith(DataProviderRunner.class)
 public class PositiveTests implements MyCategories{
 
     @Rule
     public TemporaryFolder tmpdir = new TemporaryFolder();
 
-    @DataProvider
-    public static Object[][] fileName() throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(
-                DataProvider.class.getResourceAsStream("/fileName.data")));
-
-        List<Object[]> fileNameData = new ArrayList<Object[]>();
-        String line = in.readLine();
-        while (line!=null) {
-            fileNameData.add(new Object[]{line});
-            line = in.readLine();
-        }
-        in.close();
-
-        return (Object[][]) fileNameData.toArray(new Object[][]{});
-    }
 
     @DataProvider
     public static Object[][] fileContent() {
@@ -58,7 +45,8 @@ public class PositiveTests implements MyCategories{
 
     @Test
     @Category({Positive.class})
-    @UseDataProvider("fileName")
+    @UseDataProvider(value = "dataSourceLoader",location = UniversalDataProvider.class)
+    @DataSource(value = "/fileName.data", type = RESOURCE)
     public void createFileAndChangeData (String name) throws IOException {
         FileCreator fc = new FileCreator();
         fc.createNewFile(tmpdir.getRoot()+name+".txt","POTATO!!!");
