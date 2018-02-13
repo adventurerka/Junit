@@ -8,6 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.TemporaryFolder;
+import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
 import java.io.BufferedReader;
@@ -24,6 +25,8 @@ public class PositiveTests implements MyCategories{
     @Rule
     public TemporaryFolder tmpdir = new TemporaryFolder();
 
+    @Rule
+    public TestRule tr = new RunTwiceRule();
 
     @DataProvider
     public static Object[][] fileContent() {
@@ -34,6 +37,7 @@ public class PositiveTests implements MyCategories{
         }
         return (Object[][])mylist.toArray(new Object[][]{});
     }
+
     @Test
     @Category({Positive.class, Ignor.class})
     @UseDataProvider("fileContent")
