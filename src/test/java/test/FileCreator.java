@@ -20,30 +20,14 @@ public class FileCreator {
         return sb.toString();
     }
 
-    public void createNewFile(String name, String text) throws IOException {
+    public boolean createFile(String name, String text) throws IOException {
         File statText = new File(name);
-        statText.createNewFile();
-        FileOutputStream is = new FileOutputStream(statText);
-        OutputStreamWriter osw = new OutputStreamWriter(is);
-        Writer w = new BufferedWriter(osw);
+        boolean result = statText.createNewFile();
+        Writer w = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(statText)));
         w.write(text);
         w.close();
+        return result;
     }
-
-    public boolean deleteDir(File dir) {
-        if (dir.isDirectory()) {
-            String[] children = dir.list();
-            for (int i = 0; i < children.length; i++) {
-                boolean success = deleteDir (new File(dir, children[i]));
-
-                if (!success) {
-                    return false;
-                }
-            }
-        }
-        return dir.delete();
-    }
-
 
     public String readFile(String path)throws IOException {
             byte[] encoded = Files.readAllBytes(Paths.get(path));

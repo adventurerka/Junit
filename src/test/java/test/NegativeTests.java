@@ -19,7 +19,7 @@ public class NegativeTests implements MyCategories{
     @Category(Negative.class)
     public void createFileWithEmptyName() throws IOException {
         FileCreator fc = new FileCreator();
-        fc.createNewFile(tmpdir.getRoot()+" ", "");
+        fc.createFile(tmpdir.getRoot()+" ", "");
         for (File s:tmpdir.getRoot().listFiles())
         System.out.println("List: "+s);
         Assert.assertTrue(tmpdir.getRoot().listFiles().length==0);

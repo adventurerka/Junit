@@ -11,9 +11,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,9 +29,9 @@ public class PositiveTests implements MyCategories{
     @DataProvider
     public static Object[][] fileContent() {
         List mylist = new ArrayList<Object[]>();
-        for(int i=0;i<10;i++){
-            mylist.add(new Object[]{new FileCreator().randomName(7),
-                    new FileCreator().randomName(7)});
+        for(int i=0;i<4;i++){
+            mylist.add(new Object[]{new FileCreator().randomName(3),
+                    new FileCreator().randomName(3)});
         }
         return (Object[][])mylist.toArray(new Object[][]{});
     }
@@ -43,7 +41,8 @@ public class PositiveTests implements MyCategories{
     @UseDataProvider("fileContent")
     public void createFileWithData(String fileContent, String name) throws IOException {
         FileCreator fc = new FileCreator();
-        fc.createNewFile(tmpdir.getRoot()+name+".txt", fileContent);
+        boolean result = fc.createFile(tmpdir.getRoot()+name+".txt", fileContent);
+        Assert.assertEquals(result,equals(true));
         Assert.assertEquals(fc.readFile(tmpdir.getRoot()+name+".txt"), fileContent);
     }
 
@@ -53,8 +52,11 @@ public class PositiveTests implements MyCategories{
     @DataSource(value = "/fileName.data", type = RESOURCE)
     public void createFileAndChangeData (String name) throws IOException {
         FileCreator fc = new FileCreator();
-        fc.createNewFile(tmpdir.getRoot()+name+".txt","POTATO!!!");
-        fc.createNewFile(tmpdir.getRoot()+name+".txt", "APPLE!!!");
+
+        boolean result = fc.createFile(tmpdir.getRoot()+name+".txt","POTATO!!!");
+        Assert.assertEquals(result,equals(true));
+        result = fc.createFile(tmpdir.getRoot()+name+".txt", "APPLE!!!");
+        Assert.assertEquals(result,equals(true));
         Assert.assertEquals(fc.readFile(tmpdir.getRoot()+name+".txt"),"APPLE!!!");
     }
 
