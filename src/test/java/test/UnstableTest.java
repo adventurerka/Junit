@@ -10,15 +10,22 @@ public class UnstableTest {
     @Rule
     public TestRule runTwiceRule = new RunTwiceRule();
 
-    private static int attempt = 1;
+    private static int attempt = 2;
 
     @Test
     @Unstable(3)
     public void randomlyFailingTest() {
         if (attempt == 2) {
-            attempt = 1;
         } else {
-            System.out.println("Failed on attempt");
+            Assert.fail("Failed on attempt");
+        }
+    }
+
+    @Test
+    @Unstable(3)
+    public void randomlyFailingTest2() {
+        if (attempt == 3) {
+        } else {
             Assert.fail("Failed on attempt");
         }
     }

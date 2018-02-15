@@ -5,21 +5,12 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 public class RunTwiceRule implements TestRule {
-    private int a;
 
-    public RunTwiceRule() {}
-
-    public int getA() {
-        return a;
-    }
-
-    public void setA(int a) {
-        this.a = a;
-    }
     @Override
     public Statement apply(Statement base, Description desc) {
         return new RunTwiceStatement(base, desc);
     }
+
 
     public class RunTwiceStatement extends Statement {
 
@@ -33,21 +24,25 @@ public class RunTwiceRule implements TestRule {
 
         @Override
         public void evaluate(){
-            if (new Count().getA()==0){
-                try {
-                    base.evaluate();
-                } catch (Throwable t) {
-                    System.out.println("Failed: " + desc);
+            if (desc.getAnnotation(Unstable.class)!=null) {
+                int a = desc.getAnnotation(Unstable.class).value();
+                if (a != 0) {
+                    int b =0;
+                    int c = 0;
+                for (int j = 1; j <= a; j++) {
+                    try {
+                        base.evaluate();
+                    } catch (Throwable t) {
+                        System.out.println("Failed on attempt " + desc);
+                        c++;
+                    }
+                    if (c!=b)
+                        b = c;
+                    else break;
+
                 }
             }
 
-            for (int j=1;j<=new Count().getA();j++){
-                try {
-                    base.evaluate();
-                } catch (Throwable t) {
-                    setA(j);
-                    System.out.println("Failed on attempt: " + desc);
-                }
             }
         }
 
